@@ -9,27 +9,34 @@ async function scrapeData() {
         let igdb = new Igdb(config.client_id, config.client_secret);
         await igdb.getAccessToken();
 
-        let platforms = await igdb.getPlatforms();
-        await MySql.runQuery(config, MySql.getPlatformsInsertQuery(platforms));
-        console.log('Platform db updated');
+        // let platforms = await igdb.getPlatforms();
+        // await MySql.runQuery(config, MySql.getPlatformsInsertQuery(platforms));
 
-        let offset = 0;
-        while (true) {
-            let games = await igdb.getGamesPage(offset);
+		// let genres = await igdb.getGenres();
+        // await MySql.runQuery(config, MySql.getGenresInsertQuery(genres));
 
-            if (!Array.isArray(games) || !games.length) {
-                break;
-            }
+		let themes = await igdb.getThemes();
+		await MySql.runQuery(config, MySql.getThemesInsertQuery(themes));
+		
+        console.log('added themes!');
 
-            await MySql.runQuery(config, MySql.getGamesInsertQuery(games));
-            await MySql.runQuery(config, MySql.getGamesPlatformsInsertQuery(games));
-            console.log('Games db page updated');
+        // let offset = 0;
+        // while (true) {
+        //     let games = await igdb.getGamesPage(offset);
 
-            offset += 100;
-            Utils.sleep(500);
-        }
+        //     if (!Array.isArray(games) || !games.length) {
+        //         break;
+        //     }
 
-        console.log('All games updated');
+        //     await MySql.runQuery(config, MySql.getGamesInsertQuery(games));
+        //     // await MySql.runQuery(config, MySql.getGamesPlatformsInsertQuery(games));
+        //     console.log('Games db page updated');
+
+        //     offset += 100;
+        //     Utils.sleep(500);
+        // }
+
+        // console.log('All games updated');
     } catch (error) {
         console.log(error);
     }

@@ -48,6 +48,46 @@ class Igdb {
         return allPlatforms;
     }
 
+	async getThemes() {
+        let offset = 0;
+        let allPlatforms = [];
+        let url = 'https://api.igdb.com/v4/themes';
+
+        while (true) {
+            let response = await axios.post(url, `fields *; limit 100; offset ${offset};`, { headers: this.getAuthHeaders() });
+            if (!Array.isArray(response.data) || !response.data.length) {
+                break;
+            }
+
+            allPlatforms = allPlatforms.concat(response.data);
+
+            offset += 100;
+            await Utils.sleep(500);
+        }
+
+        return allPlatforms;
+    }
+
+	async getGenres() {
+        let offset = 0;
+        let allPlatforms = [];
+        let url = 'https://api.igdb.com/v4/genres';
+
+        while (true) {
+            let response = await axios.post(url, `fields *; limit 100; offset ${offset};`, { headers: this.getAuthHeaders() });
+            if (!Array.isArray(response.data) || !response.data.length) {
+                break;
+            }
+
+            allPlatforms = allPlatforms.concat(response.data);
+
+            offset += 100;
+            await Utils.sleep(500);
+        }
+
+        return allPlatforms;
+    }
+
     async getGamesPage(offset=0) {
         let url = 'https://api.igdb.com/v4/games';
 
